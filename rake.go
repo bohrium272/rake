@@ -4,8 +4,28 @@ import (
 	"fmt"
 	"io/ioutil"
 	"regexp"
+	"sort"
 	"strings"
 )
+
+type rakeScore struct {
+	word  string
+	score float64
+}
+
+type byScore []rakeScore
+
+func (s byScore) Len() int {
+	return len(s)
+}
+
+func (s byScore) Swap(i, j int) {
+	s[i], s[j] = s[j], s[i]
+}
+
+func (s byScore) Less(i, j int) bool {
+	return s[i].score > s[j].score
+}
 
 func getLinesFromFile(filename string) []string {
 	content, _ := ioutil.ReadFile(filename)
@@ -57,6 +77,20 @@ func splitIntoSentences(text string) []string {
 	return splitPattern.Split(text, -1)
 }
 
+func combineScores(phraseList []string, scores map[string]float64) map[string]float64 {
+	candidateScores := map[string]float64{}
+	for _, phrase := range phraseList {
+		words := splitIntoWords(phrase)
+		candidateScore := float64(0.0)
+
+		for _, word := range words {
+			candidateScore += scores[word]
+		}
+		candidateScores[phrase] = candidateScore
+	}
+	return candidateScores
+}
+
 func calculateWordScores(phraseList []string) map[string]float64 {
 	frequencies := map[string]int{}
 	degrees := map[string]int{}
@@ -83,12 +117,25 @@ func calculateWordScores(phraseList []string) map[string]float64 {
 	return score
 }
 
+func sortScores(scores map[string]float64) []rakeScore {
+	rakeScores := []rakeScore{}
+	for k, v := range scores {
+		rakeScores = append(rakeScores, rakeScore{k, v})
+	}
+	sort.Sort(byScore(rakeScores))
+	return rakeScores
+}
+
 func main() {
 	sentences := splitIntoSentences("Compatibility of systems of linear constraints over the set of natural numbers. Criteria of compatibility of a system of linear Diophantine equations, strict inequations, and nonstrict inequations are considered. Upper bounds for components of a minimal set of solutions and algorithms of construction of minimal generating sets of solutions for all types of systems are given. These criteria and the corresponding algorithms for constructing a minimal supporting set of solutions can be used in solving all the considered types of systems and systems of mixed types.")
 	phraseList := []string{}
 	for _, sentence := range sentences {
 		phraseList = append(phraseList, generateCandidatePhrases(sentence)...)
-		wordScores := calculateWordScores(phraseList)
-		fmt.Println(wordScores)
+	}
+	wordScores := calculateWordScores(phraseList)
+	candidateScores := combineScores(phraseList, wordScores)
+	sortedScores := sortScores(candidateScores)
+	for _, rakeScore := range sortedScores {
+		fmt.Println(rakeScore.word, rakeScore.score)
 	}
 }
