@@ -27,6 +27,11 @@ func (s byScore) Less(i, j int) bool {
 	return s[i].score > s[j].score
 }
 
+func getTextFromFile(filename string) string {
+	content, _ := ioutil.ReadFile(filename)
+	return string(content)
+}
+
 func getLinesFromFile(filename string) []string {
 	content, _ := ioutil.ReadFile(filename)
 	return strings.Split(string(content), "\n")
@@ -127,7 +132,7 @@ func sortScores(scores map[string]float64) []rakeScore {
 }
 
 func main() {
-	sentences := splitIntoSentences("Compatibility of systems of linear constraints over the set of natural numbers. Criteria of compatibility of a system of linear Diophantine equations, strict inequations, and nonstrict inequations are considered. Upper bounds for components of a minimal set of solutions and algorithms of construction of minimal generating sets of solutions for all types of systems are given. These criteria and the corresponding algorithms for constructing a minimal supporting set of solutions can be used in solving all the considered types of systems and systems of mixed types.")
+	sentences := splitIntoSentences(getTextFromFile("text.txt"))
 	phraseList := []string{}
 	for _, sentence := range sentences {
 		phraseList = append(phraseList, generateCandidatePhrases(sentence)...)
