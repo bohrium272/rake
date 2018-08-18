@@ -39,7 +39,7 @@ func getLinesFromFile(filename string) []string {
 
 func splitIntoWords(text string) []string {
 	words := []string{}
-	wordSplitRegex := regexp.MustCompile("[\\p{L}\\d_]+")
+	wordSplitRegex := regexp.MustCompile(ForWordSplit)
 	splitWords := wordSplitRegex.FindAllString(text, -1)
 	for _, word := range splitWords {
 		currentWord := strings.ToLower(strings.TrimSpace(word))
@@ -51,10 +51,10 @@ func splitIntoWords(text string) []string {
 }
 
 func getStopWordRegex() string {
-	stopwords := getLinesFromFile("SmartStoplist.txt")
+	stopwords := getLinesFromFile(StopwordFilename)
 	stopwordRegexPattern := []string{}
 	for _, word := range stopwords {
-		wordRegex := fmt.Sprintf(`(?:\A|\z|\s)%s(?:\A|\z|\s)`, word)
+		wordRegex := fmt.Sprintf(ForStopWordDetection, word)
 		stopwordRegexPattern = append(stopwordRegexPattern, wordRegex)
 	}
 	return `(?i)` + strings.Join(stopwordRegexPattern, "|")
@@ -78,7 +78,7 @@ func generateCandidatePhrases(text string) []string {
 }
 
 func splitIntoSentences(text string) []string {
-	splitPattern := regexp.MustCompile(`[.,\/#!$%\^&\*;:{}=\-_~()]`)
+	splitPattern := regexp.MustCompile(ForSplittingSentences)
 	return splitPattern.Split(text, -1)
 }
 
@@ -132,7 +132,7 @@ func sortScores(scores map[string]float64) []rakeScore {
 }
 
 func main() {
-	sentences := splitIntoSentences(getTextFromFile("text.txt"))
+	sentences := splitIntoSentences(getTextFromFile(TextFilename))
 	phraseList := []string{}
 	for _, sentence := range sentences {
 		phraseList = append(phraseList, generateCandidatePhrases(sentence)...)
