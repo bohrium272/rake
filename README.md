@@ -5,6 +5,6 @@ RAKE is short for Rapid Automatic Keyword Extraction. The original research pape
 To Do
 
 - [X] Basic implementation
-- [ ] Clean up and organize code
+- [X] Clean up and organize code
 - [ ] Implement package-like abstraction
 - [ ] Convert to a REST API
