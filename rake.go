@@ -131,7 +131,7 @@ func sortScores(scores map[string]float64) []rakeScore {
 	return rakeScores
 }
 
-func main() {
+func rake() {
 	sentences := splitIntoSentences(getTextFromFile(TextFilename))
 	phraseList := []string{}
 	for _, sentence := range sentences {
