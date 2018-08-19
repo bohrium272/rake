@@ -1,4 +1,4 @@
-package main
+package rake
 
 // ForWordSplit - Splitting Words
 const ForWordSplit = "[\\p{L}\\d_]+"
