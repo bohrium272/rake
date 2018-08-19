@@ -131,8 +131,8 @@ func sortScores(scores map[string]float64) []rakeScore {
 	return rakeScores
 }
 
-func rake() {
-	sentences := splitIntoSentences(getTextFromFile(TextFilename))
+func rake(text string) {
+	sentences := splitIntoSentences(text)
 	phraseList := []string{}
 	for _, sentence := range sentences {
 		phraseList = append(phraseList, generateCandidatePhrases(sentence)...)
@@ -143,4 +143,13 @@ func rake() {
 	for _, rakeScore := range sortedScores {
 		fmt.Println(rakeScore.word, rakeScore.score)
 	}
+}
+
+func rakeWithFile(filename string) {
+	text := getTextFromFile(filename)
+	rake(text)
+}
+
+func rakeWithText(text string) {
+	rake(text)
 }
