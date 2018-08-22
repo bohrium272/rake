@@ -8,20 +8,20 @@ import (
 	"strings"
 )
 
-// ForWordSplit - Splitting Words
-const ForWordSplit = "[\\p{L}\\d_]+"
+// forWordSplit - Splitting Words
+const forWordSplit = "[\\p{L}\\d_]+"
 
-// ForStopWordDetection - Filtering stop words
-const ForStopWordDetection = `(?:\A|\z|\s)%s(?:\A|\z|\s)`
+// forStopWordDetection - Filtering stop words
+const forStopWordDetection = `(?:\A|\z|\s)%s(?:\A|\z|\s)`
 
-// ForSplittingSentences - Splitting Sentences
-const ForSplittingSentences = `[.,\/#!$%\^&\*;:{}=\-_~()]`
+// forSplittingSentences - Splitting Sentences
+const forSplittingSentences = `[.,\/#!$%\^&\*;:{}=\-_~()]`
 
-// TextFilename - The file from which text is read for analysis
-const TextFilename = "text.txt"
+// textFilename - The file from which text is read for analysis
+const textFilename = "text.txt"
 
-// StopwordFilename - The file of which each line is a stop word
-const StopwordFilename = "SmartStoplist.txt"
+// stopwordFilename - The file of which each line is a stop word
+const stopwordFilename = "SmartStoplist.txt"
 
 type rakeScore struct {
 	word  string
@@ -54,7 +54,7 @@ func getLinesFromFile(filename string) []string {
 
 func splitIntoWords(text string) []string {
 	words := []string{}
-	wordSplitRegex := regexp.MustCompile(ForWordSplit)
+	wordSplitRegex := regexp.MustCompile(forWordSplit)
 	splitWords := wordSplitRegex.FindAllString(text, -1)
 	for _, word := range splitWords {
 		currentWord := strings.ToLower(strings.TrimSpace(word))
@@ -66,10 +66,10 @@ func splitIntoWords(text string) []string {
 }
 
 func getStopWordRegex() string {
-	stopwords := getLinesFromFile(StopwordFilename)
+	stopwords := getLinesFromFile(stopwordFilename)
 	stopwordRegexPattern := []string{}
 	for _, word := range stopwords {
-		wordRegex := fmt.Sprintf(ForStopWordDetection, word)
+		wordRegex := fmt.Sprintf(forStopWordDetection, word)
 		stopwordRegexPattern = append(stopwordRegexPattern, wordRegex)
 	}
 	return `(?i)` + strings.Join(stopwordRegexPattern, "|")
@@ -93,7 +93,7 @@ func generateCandidatePhrases(text string) []string {
 }
 
 func splitIntoSentences(text string) []string {
-	splitPattern := regexp.MustCompile(ForSplittingSentences)
+	splitPattern := regexp.MustCompile(forSplittingSentences)
 	return splitPattern.Split(text, -1)
 }
 
@@ -160,11 +160,13 @@ func rake(text string) {
 	}
 }
 
-func rakeWithFile(filename string) {
+// WithFile : Run rake with text from a file
+func WithFile(filename string) {
 	text := getTextFromFile(filename)
 	rake(text)
 }
 
-func rakeWithText(text string) {
+// WithText : Run rake directly from text
+func WithText(text string) {
 	rake(text)
 }
