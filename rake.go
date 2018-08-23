@@ -58,7 +58,7 @@ func getStopWordRegex() string {
 		wordRegex := fmt.Sprintf(forStopWordDetection, word)
 		stopwordRegexPattern = append(stopwordRegexPattern, wordRegex)
 	}
-	return `(?i)` + strings.Join(stopwordRegexPattern, "|")
+	return strings.Join(stopwordRegexPattern, "|")
 }
 
 func generateCandidatePhrases(text string) []string {
