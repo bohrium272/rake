@@ -4,10 +4,10 @@ package rake
 const forWordSplit = "[^a-zA-Z0-9_\\+\\-/]"
 
 // forStopWordDetection - Filtering stop words
-const forStopWordDetection = `(?:\A|\z|\s)%s(?:\A|\z|\s)`
+const forStopWordDetection = `\b%s(?![\w-])`
 
 // forSplittingSentences - Splitting Sentences
-const forSplittingSentences = `[.,\/#!$%\^&\*;:{}=\-_~()]`
+const forSplittingSentences = `[.!?,;:\t\\\\"\\(\\)\\\'\u2019\u2013]|\\s\\-\\s`
 
 // textFilename - The file from which text is read for analysis
 const textFilename = "text.txt"
