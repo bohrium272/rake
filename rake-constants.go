@@ -7,7 +7,7 @@ const forWordSplit = "[^a-zA-Z0-9_\\+\\-/]"
 const forStopWordDetection = `\b%s(?![\w-])`
 
 // forSplittingSentences - Splitting Sentences
-const forSplittingSentences = `[.!?,;:\t\\\\"\\(\\)\\\'\u2019\u2013]|\\s\\-\\s`
+const forSplittingSentences = `[.,\/#!$%\^&\*;:{}=\-_~()]`
 
 // textFilename - The file from which text is read for analysis
 const textFilename = "text.txt"
