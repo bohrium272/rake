@@ -145,12 +145,22 @@ func rake(text string) []Score {
 }
 
 // WithFile : Run rake with text from a file
-func WithFile(filename string) []Score {
+func WithFile(filename string) map[string]float64 {
 	text := getTextFromFile(filename)
-	return rake(text)
+	scores := rake(text)
+	scoreDict := map[string]float64
+	for score := range scores {
+		scoreDict[score.word] = score.score
+	}
+	return scoreDict
 }
 
 // WithText : Run rake directly from text
-func WithText(text string) []Score {
-	return rake(text)
+func WithText(text string) map[string]float64 {
+	scores := rake(text)
+	scoreDict := map[string]float64
+	for score := range scores {
+		scoreDict[score.word] = score.score
+	}
+	return scoreDict
 }
