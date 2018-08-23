@@ -1,7 +1,7 @@
 package rake
 
 // forWordSplit - Splitting Words
-const forWordSplit = "[\\p{L}\\d_]+"
+const forWordSplit = "[^a-zA-Z0-9_\\+\\-/]"
 
 // forStopWordDetection - Filtering stop words
 const forStopWordDetection = `(?:\A|\z|\s)%s(?:\A|\z|\s)`
