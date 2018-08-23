@@ -8,12 +8,13 @@ import (
 	"strings"
 )
 
-type rakeScore struct {
+// Score : (Word, Score) pair
+type Score struct {
 	word  string
 	score float64
 }
 
-type byScore []rakeScore
+type byScore []Score
 
 func (s byScore) Len() int {
 	return len(s)
@@ -122,16 +123,16 @@ func calculateWordScores(phraseList []string) map[string]float64 {
 	return score
 }
 
-func sortScores(scores map[string]float64) []rakeScore {
-	rakeScores := []rakeScore{}
+func sortScores(scores map[string]float64) []Score {
+	rakeScores := []Score{}
 	for k, v := range scores {
-		rakeScores = append(rakeScores, rakeScore{k, v})
+		rakeScores = append(rakeScores, Score{k, v})
 	}
 	sort.Sort(byScore(rakeScores))
 	return rakeScores
 }
 
-func rake(text string) {
+func rake(text string) []Score {
 	sentences := splitIntoSentences(text)
 	phraseList := []string{}
 	for _, sentence := range sentences {
@@ -140,18 +141,16 @@ func rake(text string) {
 	wordScores := calculateWordScores(phraseList)
 	candidateScores := combineScores(phraseList, wordScores)
 	sortedScores := sortScores(candidateScores)
-	for _, rakeScore := range sortedScores {
-		fmt.Println(rakeScore.word, rakeScore.score)
-	}
+	return sortedScores
 }
 
 // WithFile : Run rake with text from a file
-func WithFile(filename string) {
+func WithFile(filename string) []Score {
 	text := getTextFromFile(filename)
-	rake(text)
+	return rake(text)
 }
 
 // WithText : Run rake directly from text
-func WithText(text string) {
-	rake(text)
+func WithText(text string) []Score {
+	return rake(text)
 }
