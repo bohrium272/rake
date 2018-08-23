@@ -148,8 +148,8 @@ func rake(text string) []Score {
 func WithFile(filename string) map[string]float64 {
 	text := getTextFromFile(filename)
 	scores := rake(text)
-	scoreDict := map[string]float64
-	for score := range scores {
+	scoreDict := make(map[string]float64)
+	for _, score := range scores {
 		scoreDict[score.word] = score.score
 	}
 	return scoreDict
@@ -158,8 +158,8 @@ func WithFile(filename string) map[string]float64 {
 // WithText : Run rake directly from text
 func WithText(text string) map[string]float64 {
 	scores := rake(text)
-	scoreDict := map[string]float64
-	for score := range scores {
+	scoreDict := make(map[string]float64)
+	for _, score := range scores {
 		scoreDict[score.word] = score.score
 	}
 	return scoreDict
