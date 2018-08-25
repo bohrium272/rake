@@ -1,7 +1,6 @@
 package rake
 
 import (
-	"fmt"
 	"io/ioutil"
 	"sort"
 	"strings"
@@ -57,16 +56,6 @@ func getStopwords() map[string]bool {
 		dict[word] = true
 	}
 	return dict
-}
-
-func getStopWordRegex() string {
-	stopwords := getLinesFromFile(stopwordFilename)
-	stopwordRegexPattern := []string{}
-	for _, word := range stopwords {
-		wordRegex := fmt.Sprintf(forStopWordDetection, word)
-		stopwordRegexPattern = append(stopwordRegexPattern, wordRegex)
-	}
-	return `(?i)` + strings.Join(stopwordRegexPattern, "|")
 }
 
 func generateCandidatePhrases(text string) []string {
