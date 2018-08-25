@@ -130,16 +130,19 @@ func calculateWordScores(phraseList []string) map[string]float64 {
 	return score
 }
 
-func sortScores(scores map[string]float64) []Score {
+func sortScores(scores map[string]float64, topN int) []Score {
 	rakeScores := []Score{}
 	for k, v := range scores {
 		rakeScores = append(rakeScores, Score{k, v})
 	}
 	sort.Sort(byScore(rakeScores))
+	if topN < len(rakeScores) && topN > 0 {
+		return rakeScores[0:topN]
+	}
 	return rakeScores
 }
 
-func rake(text string) map[string]float64 {
+func rake(text string, topN int) map[string]float64 {
 	sentences := splitIntoSentences(text)
 	phraseList := []string{}
 	for _, sentence := range sentences {
@@ -147,7 +150,7 @@ func rake(text string) map[string]float64 {
 	}
 	wordScores := calculateWordScores(phraseList)
 	candidateScores := combineScores(phraseList, wordScores)
-	sortedScores := sortScores(candidateScores)
+	sortedScores := sortScores(candidateScores, topN)
 	scoreDict := make(map[string]float64)
 	for _, score := range sortedScores {
 		scoreDict[score.word] = score.score
@@ -158,10 +161,15 @@ func rake(text string) map[string]float64 {
 // WithFile : Run rake with text from a file
 func WithFile(filename string) map[string]float64 {
 	text := getTextFromFile(filename)
-	return rake(text)
+	return rake(text, 10)
 }
 
 // WithText : Run rake directly from text
 func WithText(text string) map[string]float64 {
-	return rake(text)
+	return rake(text, 10)
+}
+
+// TopNWithText : Run rake directly from text and return the top N results
+func TopNWithText(text string, topN int) map[string]float64 {
+	return rake(text, topN)
 }
