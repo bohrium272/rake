@@ -3,9 +3,9 @@ package rake
 import (
 	"fmt"
 	"io/ioutil"
-	"regexp"
 	"sort"
 	"strings"
+	"unicode"
 )
 
 // Score : (Word, Score) pair
@@ -40,8 +40,7 @@ func getLinesFromFile(filename string) []string {
 
 func splitIntoWords(text string) []string {
 	words := []string{}
-	wordSplitRegex := regexp.MustCompile(forWordSplit)
-	splitWords := wordSplitRegex.FindAllString(text, -1)
+	splitWords := strings.Fields(text)
 	for _, word := range splitWords {
 		currentWord := strings.ToLower(strings.TrimSpace(word))
 		if currentWord != "" {
@@ -49,6 +48,15 @@ func splitIntoWords(text string) []string {
 		}
 	}
 	return words
+}
+
+func getStopwords() map[string]bool {
+	stopwords := getLinesFromFile(stopwordFilename)
+	dict := map[string]bool{}
+	for _, word := range stopwords {
+		dict[word] = true
+	}
+	return dict
 }
 
 func getStopWordRegex() string {
@@ -62,25 +70,35 @@ func getStopWordRegex() string {
 }
 
 func generateCandidatePhrases(text string) []string {
-	stopWordRegex := regexp.MustCompile(getStopWordRegex())
-	temp := stopWordRegex.ReplaceAllString(text, "|")
-	multipleWhitespaceRegex := regexp.MustCompile(`\s\s+`)
-	temp = multipleWhitespaceRegex.ReplaceAllString(strings.TrimSpace(temp), " ")
+	stopwords := getStopwords()
+	words := splitIntoWords(text)
+	acceptedWords := []string{}
+	for _, word := range words {
+		if !stopwords[word] {
+			acceptedWords = append(acceptedWords, word)
+		} else {
+			acceptedWords = append(acceptedWords, "|")
+		}
+	}
 
 	phraseList := []string{}
-	phrases := strings.Split(temp, "|")
-	for _, phrase := range phrases {
-		phrase = strings.ToLower(phrase)
-		if phrase != "" {
+	phrase := ""
+	for _, word := range acceptedWords {
+		if word == "|" {
 			phraseList = append(phraseList, phrase)
+			phrase = ""
+		} else {
+			phrase = phrase + " " + word
 		}
 	}
 	return phraseList
 }
 
 func splitIntoSentences(text string) []string {
-	splitPattern := regexp.MustCompile(forSplittingSentences)
-	return splitPattern.Split(text, -1)
+	splitFunc := func(c rune) bool {
+		return unicode.IsPunct(c)
+	}
+	return strings.FieldsFunc(text, splitFunc)
 }
 
 func combineScores(phraseList []string, scores map[string]float64) map[string]float64 {
