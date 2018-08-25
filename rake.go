@@ -139,7 +139,7 @@ func sortScores(scores map[string]float64) []Score {
 	return rakeScores
 }
 
-func rake(text string) []Score {
+func rake(text string) map[string]float64 {
 	sentences := splitIntoSentences(text)
 	phraseList := []string{}
 	for _, sentence := range sentences {
@@ -148,26 +148,20 @@ func rake(text string) []Score {
 	wordScores := calculateWordScores(phraseList)
 	candidateScores := combineScores(phraseList, wordScores)
 	sortedScores := sortScores(candidateScores)
-	return sortedScores
+	scoreDict := make(map[string]float64)
+	for _, score := range sortedScores {
+		scoreDict[score.word] = score.score
+	}
+	return scoreDict
 }
 
 // WithFile : Run rake with text from a file
 func WithFile(filename string) map[string]float64 {
 	text := getTextFromFile(filename)
-	scores := rake(text)
-	scoreDict := make(map[string]float64)
-	for _, score := range scores {
-		scoreDict[score.word] = score.score
-	}
-	return scoreDict
+	return rake(text)
 }
 
 // WithText : Run rake directly from text
 func WithText(text string) map[string]float64 {
-	scores := rake(text)
-	scoreDict := make(map[string]float64)
-	for _, score := range scores {
-		scoreDict[score.word] = score.score
-	}
-	return scoreDict
+	return rake(text)
 }
