@@ -51,7 +51,7 @@ func splitIntoWords(text string) []string {
 }
 
 func getStopwords() map[string]bool {
-	stopwords := getLinesFromFile(stopwordFilename)
+	stopwords := Stopwords
 	dict := map[string]bool{}
 	for _, word := range stopwords {
 		dict[word] = true
