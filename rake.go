@@ -153,7 +153,7 @@ func rake(text string, topN int) map[string]float64 {
 	sortedScores := sortScores(candidateScores, topN)
 	scoreDict := make(map[string]float64)
 	for _, score := range sortedScores {
-		scoreDict[score.word] = score.score
+		scoreDict[strings.TrimSpace(score.word)] = score.score
 	}
 	return scoreDict
 }
