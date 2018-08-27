@@ -1,7 +1,6 @@
 package rake
 
 import (
-	"fmt"
 	"io/ioutil"
 	"sort"
 	"strings"
@@ -137,7 +136,6 @@ func sortScores(scores map[string]float64, topN int) []Score {
 		rakeScores = append(rakeScores, Score{k, v})
 	}
 	sort.Sort(byScore(rakeScores))
-	fmt.Println(rakeScores)
 	if topN < len(rakeScores) && topN > 0 {
 		return rakeScores[0:topN]
 	}
