@@ -8,12 +8,12 @@ import (
 )
 
 // Score : (Word, Score) pair
-type Score struct {
+type score struct {
 	word  string
 	score float64
 }
 
-type byScore []Score
+type byScore []score
 
 func (s byScore) Len() int {
 	return len(s)
@@ -50,7 +50,7 @@ func splitIntoWords(text string) []string {
 }
 
 func getStopwords() map[string]bool {
-	stopwords := Stopwords
+	stopwords := stopwords
 	dict := map[string]bool{}
 	for _, word := range stopwords {
 		dict[word] = true
@@ -130,10 +130,10 @@ func calculateWordScores(phraseList []string) map[string]float64 {
 	return score
 }
 
-func sortScores(scores map[string]float64, topN int) []Score {
-	rakeScores := []Score{}
+func sortScores(scores map[string]float64, topN int) []score {
+	rakeScores := []score{}
 	for k, v := range scores {
-		rakeScores = append(rakeScores, Score{k, v})
+		rakeScores = append(rakeScores, score{k, v})
 	}
 	sort.Sort(byScore(rakeScores))
 	if topN < len(rakeScores) && topN > 0 {
