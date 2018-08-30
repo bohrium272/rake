@@ -18,9 +18,13 @@ func main() {
 }
 ```
 
+### Web API
+
+Make a POST request on https://frozen-lowlands-96920.herokuapp.com/rake with `{'text': <query_text>}`
+
 ### To Do
 
 - [X] Basic implementation
 - [X] Clean up and organize code
 - [X] Implement package-like abstraction
-- [ ] Convert to a REST API
+- [X] Convert to a REST API
