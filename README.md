@@ -20,7 +20,7 @@ func main() {
 
 ### Web API
 
-Make a POST request on https://frozen-lowlands-96920.herokuapp.com/rake with `{'text': <query_text>}`
+Make a GET request on `https://frozen-lowlands-96920.herokuapp.com/rake?text=<text>`
 
 ### To Do
 
